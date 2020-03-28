@@ -1,0 +1,8 @@
+CHIP IsZero16 {
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    Or16Way(in=in, out=nzr);
+    Not(in=nzr, out=out);
+}
