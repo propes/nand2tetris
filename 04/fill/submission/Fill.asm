@@ -11,11 +11,6 @@
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
 
-    // Initialise cursor to location of SCREEN
-    @SCREEN
-    D=A
-    @cursor
-    M=D
 
     // cmax = KBD address - 1
     @KBD
@@ -23,22 +18,40 @@
     @cmax
     M=D-1
 
-    // Poll keyboard input
-//(KEY_POLL)
-//
-//    // If key is pressed goto BLACK
-//    @KBD
-//    D=M
-//    @BLACK
-//    D;JGT
+
+// Poll keyboard input
+(KEY_POLL)
+
+    // If key is pressed goto BLACK
+    @KBD
+    D=M
+    @BLACK
+    D;JGT
 
     // Set the pen to off
     @pen
-//    M=0
-M=-1
+    M=0
 
-    // Paint the screen
-//(PAINT)
+    (BLACK_RETURN)
+
+    @PAINT
+    0;JMP
+
+    (PAINT_RETURN)
+
+    @KEY_POLL
+    0;JMP
+
+
+
+// Paint the screen
+(PAINT)
+    // Initialise cursor to location of SCREEN
+    @SCREEN
+    D=A
+    @cursor
+    M=D
+
     (CURSOR_LOOP)
         // if cursor > cmax goto END_CURSOR_LOOP
         @cursor
@@ -64,15 +77,19 @@ M=-1
 
     (END_CURSOR_LOOP)
 
-//    @KEY_POLL
-//    0;JMP
+    @PAINT_RETURN
+    0;JMP
 
-//(BLACK)
-//    // Set the pen to on
-//    @pen
-//    M=-1
-//    @PAINT
-//    0;JMP
+
+
+(BLACK)
+    // Set the pen to on
+    @pen
+    M=-1
+    
+    @BLACK_RETURN
+    0;JMP
+
 
 (END)
     @END
